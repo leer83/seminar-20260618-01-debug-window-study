@@ -1,0 +1,228 @@
+/* ───────────────────────────────────────────────────────┐
+ * file name : debugWindow.css
+ * description : 디버그창CSS 모음
+ * create date : 2026-01-06 16:07:43
+ * creator : JGY
+ * modify: 2026-01-06 16:07:43 - create
+ * usage:
+└────────────────────────────────────────────────────── */
+
+#debug-window {
+    --button-hover-color: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.8) 0 0 no-repeat;
+    width: 400px;
+    height: 300px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid rgb(51, 51, 51);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 10000;
+}
+
+#debug-window * {
+    color: #fff;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+/* #debug-window.dragging .drag-area {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#debug-window .drag-area:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+} */
+
+#debug-window button:hover {
+    outline: 1px solid var(--button-hover-color);
+}
+
+
+#debug-window .top-area {
+    background: rgb(51, 51, 51) 0 0 no-repeat;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid rgb(85, 85, 85);
+    font-weight: bold;
+    user-select: none;
+}
+
+#debug-window .top-area .title {}
+
+#debug-window .top-area .drag-area {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    cursor: pointer;
+}
+
+#debug-window .top-area .btn-area {
+    position: relative;
+}
+
+#debug-window .top-area .btn-area button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+}
+
+#debug-window .top-area .btn-area .btn-close {}
+
+#debug-window .top-area .btn-area .btn-toggle-show {}
+
+
+#debug-window .top-area .btn-area .btn-toggle-show .icon {
+    font-size: 20px;
+}
+
+
+
+
+#debug-window .mid-area {
+    flex: 1 1 0%;
+    padding: 8px;
+    overflow-y: auto;
+    line-height: 1.4;
+}
+
+#debug-window .mid-area .log {
+    display: flex;
+    justify-content: flex-start;
+    align-items: start;
+    gap: 4px;
+    padding: 2px 0px;
+    border-bottom: 1px solid rgb(51, 51, 51);
+    overflow-wrap: break-word;
+}
+
+#debug-window .mid-area .log[data-tp="error"] * {
+    color: #F44336;
+}
+
+#debug-window .mid-area .log[data-tp="warn"] * {
+    color: #ffc107;
+}
+
+#debug-window .mid-area .log[data-tp="info"] * {
+    color: #2196F3;
+}
+
+
+
+
+#debug-window .mid-area .log .time {
+    /* 내용만큼 */
+    flex: 0 0 auto;
+}
+
+#debug-window .mid-area .log .icon {
+    /* 내용만큼 */
+    flex: 0 0 auto;
+}
+
+#debug-window .mid-area .log .msg {
+    /* 남은 공간 모두 가져감 */
+    flex: 1 1 auto;
+    /* overflow-wrap: break-word; */
+    word-break: break-word;
+}
+
+#debug-window .mid-area .log .btn-remove {
+    /* 내용만큼 */
+    flex: 0 0 auto;
+    /* 오른쪽 끝으로 밀기 */
+    margin-left: auto;
+}
+
+/* 균등하게 나눔 */
+/*
+#debug-window .mid-area .log .icon,
+#debug-window .mid-area .log .msg{
+	flex: 1 1 0;
+}
+*/
+
+#debug-window .mid-area .log[data-tp="error"] .icon {}
+
+#debug-window .mid-area .log[data-tp="warn"] .icon {}
+
+#debug-window .mid-area .log[data-tp="info"] .icon {}
+
+
+
+
+
+
+
+
+#debug-window .bottom-area {
+    background: rgb(68, 68, 68) 0 0 no-repeat;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-top: 1px solid rgb(85, 85, 85);
+    user-select: none;
+}
+
+#debug-window .bottom-area * {}
+
+#debug-window .bottom-area button {
+    border-right: none;
+    border-bottom: none;
+    border-left: none;
+    border-image: initial;
+    padding: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#debug-window .bottom-area button:active {
+    background-color: rgb(100, 100, 100);
+}
+
+#debug-window .bottom-area .btn-clear {
+    width: 100%;
+}
+
+
+
+
+
+/* 최대화, 최소화 */
+#debug-window[data-state="min"] {
+    height: auto;
+}
+
+#debug-window[data-state="min"] .top-area {
+    border-bottom: none;
+}
+
+#debug-window[data-state="max"] .top-area .btn-area .btn-toggle-show .icon[data-role="max"],
+#debug-window[data-state="min"] .top-area .btn-area .btn-toggle-show .icon[data-role="min"] {
+    display: none;
+}
+
+#debug-window[data-state="max"] .top-area .btn-area .btn-toggle-show .icon[data-role="min"],
+#debug-window[data-state="min"] .top-area .btn-area .btn-toggle-show .icon[data-role="max"] {
+    display: block;
+}
+
+#debug-window[data-state="min"] .mid-area,
+#debug-window[data-state="min"] .bottom-area {
+    display: none;
+}
+
+#debug-window[data-state="max"] .mid-area,
+#debug-window[data-state="max"] .bottom-area {}

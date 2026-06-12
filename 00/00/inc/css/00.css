@@ -1,0 +1,78 @@
+﻿/* jQuery v3.2 이상 에서만 조작 가능 */
+/* https://wit.nts-corp.com/2017/06/27/4731 */
+/* https://inpa.tistory.com/entry/CSS-📚-CSS용-변수-variable-정리 */
+/* $(':root').css({ '--main-bg-color': 'yellow' }); */
+/* const root = document.documentElement; root.style.setProperty('--main-bg-color', 'yellow'); */
+/* h1 { var(--main-bg-color); } */
+:root {
+	--main-bg-color: brown;
+}
+
+#wrap {
+	/* background: none !important; */
+	/* outline: 1px solid red; */
+}
+
+/* 가이드 */
+.tt {
+	/* background: url(../images/00/tt.png) 0 0 no-repeat; */
+}
+
+.setContent {}
+
+.setContent li {}
+
+.setContent li:nth-child(2) {}
+
+
+/* contents:nth-child(1) -------------------------------------------------------------*/
+.contents:nth-child(1) {
+	background: url('../images/00/bg_temp.png') center bottom no-repeat;
+}
+
+.contents:nth-child(2) {
+	background: url('../images/00/bg_temp.png') center bottom no-repeat;
+}
+
+/* contents:nth-child(2) -------------------------------------------------------------*/
+
+/* contents:nth-child(3) -------------------------------------------------------------*/
+
+/*------------------------------------------------------------------------------------*/
+
+.btnWrap {
+	position: absolute;
+	left: 100px;
+	top: 100px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 40px;
+}
+
+.btnWrap .btn {
+	background: #eee 0 0 no-repeat;
+	width: 100px;
+	height: 100px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	user-select: none;
+	cursor: pointer;
+	font-size: 30px;
+	line-height: 30px;
+	text-align: center;
+}
+
+.btnWrap .btn:active {
+	background: #c00 0 0 no-repeat;
+	color: #fff;
+}
+
+.btnWrap .btn[data-role="log"] {}
+
+.btnWrap .btn[data-role="info"] {}
+
+.btnWrap .btn[data-role="warn"] {}
+
+.btnWrap .btn[data-role="error"] {}
