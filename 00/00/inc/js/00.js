@@ -86,7 +86,16 @@ function run() {
                 break;
             case 'error':
                 // debugLog(`error_${errorCnt++}`, 'error');
-                error('123'); //! 강제 에러 발생
+
+                //! 강제 에러 발생
+
+                TEST('123');
+
+                // const test = new TEST();
+
+                /* Promise.reject(
+                    new Error('bbb')
+                ); */
                 break;
         }
     });
@@ -302,17 +311,64 @@ const DebugWindow = function DebugWindow(data) {
         window.debugLog = self.debugLog.bind(self);
 
 
-        //* catch ERROR
+        //* [Catch ERROR ] ===========================
+
+
+        // [ 오래된 API ]
         //https://javascript.info/onload-onerror
-        window.onerror = function (errorMsg, url, lineNumber) {
+        /* window.onerror = function (message, url, lineNo, colNo, error) {
             // console.log(arguments);
 
-            const msg = `Error: ${errorMsg} Script: ${url} Line: ${lineNumber}`;
+            const msg = `Error: ${message} Script: ${url} Line: ${lineNo}`;
             window.debugLog(msg, 'error');
 
-            // 기본 오류 메시지 표시를 막기
-            // return true;
-        };
+            // 브라우저의 기본 에러 처리 막기
+            return true;
+        }; */
+
+        // [표준 Event API]
+        // https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Error/stack
+        // https://javascript.info/custom-errors
+
+        // 일반 JS에러
+        window.addEventListener('error', function (event) {
+
+            // 브라우저의 기본 에러 처리 막기
+            // event.preventDefault();
+
+            onGlobalError({
+                type: 'error',
+                message: event.message,
+                file: event.filename,
+                line: event.lineno,
+                column: event.colno,
+                stack: event.error && event.error.stack,
+            });
+        });
+
+        // 처리되지 않은 Promise 에러
+        /*
+        ex)
+        Promise.reject(
+            new Error('bbb')
+        );
+        */
+        window.addEventListener('unhandledrejection', function (event) {
+
+            // 브라우저의 기본 에러 처리 막기
+            // event.preventDefault();
+
+            const stackInfo = parseStack(event.reason && event.reason.stack);
+
+            onGlobalError({
+                type: 'promise',
+                message: event.reason && event.reason.message,
+                file: stackInfo.file,
+                line: stackInfo.line,
+                column: stackInfo.colno,
+                stack: event.reason && event.reason.stack,
+            });
+        });
 
         self.debugLog('🔧 Debug window initialized');
 
@@ -320,7 +376,53 @@ const DebugWindow = function DebugWindow(data) {
         // 드래그 처리
         self.elements.dragArea.off(downEvent);
         self.elements.dragArea[0].addEventListener(downEvent, onDown, { passive: false });
+    };
 
+    // stack문자열을 파싱
+    const parseStack = function (stack) {
+
+        let result = {
+            file: '',
+            line: 0,
+            colno: 0,
+        };
+
+        if (!stack) {
+            return result;
+        }
+
+        // 한 번에 탐색
+        /* const match = stack.match(/(https?:\/\/.+?|\/.+?|[A-Za-z]:\\.+?):(\d+):(\d+)/);
+
+        if (match) {
+            result.file = match[1];
+            result.line = parseInt(match[2], 10);
+            result.colno = parseInt(match[3], 10);
+        } */
+
+        // 한 줄 씩 탐색
+        const lines = stack.split('\n');
+        let match;
+        for (let i = 0; i < lines.length; i++) {
+            match = lines[i].match(/(.+):(\d+):(\d+)/);
+            if (match) {
+                result.file = match[1]
+                    .replace(/^\s*at\s+/, '')
+                    .replace(/\s*\(.+$/, '');
+
+                result.line = parseInt(match[2], 10);
+                result.column = parseInt(match[3], 10);
+                break;
+            }
+        }
+
+        return result;
+    };
+
+    const onGlobalError = function (errorData) {
+        // console.log('errorData:', errorData);
+        const msg = `Error: ${errorData.message} Script: ${errorData.file} Line: ${errorData.line}`;
+        window.debugLog(msg, 'error');
     };
 
     this.closeDebugWindow = function () {
@@ -465,6 +567,7 @@ const DebugWindow = function DebugWindow(data) {
 
         type = type || 'log';
 
+        // 개발자 도구 - 콘솔에 출력
         switch (type) {
             case 'log':
                 console.log(log);
